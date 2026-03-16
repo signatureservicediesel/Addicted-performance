@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature Service Diesel | Addicted Performance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --neon-orange: #ff6600;
+            --neon-blue: #00f3ff;
+            --dark-metal: #0a0a0a;
+            --carbon-fiber: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark-metal);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .font-display {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-orange);
+            border-radius: 4px;
+        }
+
+        /* Metallic Texture */
+        .metallic-bg {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 50%, #2a2a2a 100%);
+            background-size: 200% 200%;
+            animation: metalShift 10s ease infinite;
+        }
+
+        @keyframes metalShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Neon Glow Effects */
+        .neon-text-orange {
+            text-shadow: 0 0 10px rgba(255, 102, 0, 0.5), 0 0 20px rgba(255, 102, 0, 0.3);
+        }
+        .neon-text-blue {
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5), 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+        
+        .neon-border {
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.2), inset 0 0 10px rgba(255, 102, 0, 0.1);
+            border: 1px solid rgba(255, 102, 0, 0.5);
+        }
+
+        /* Glitch Effect for Titles */
+        .glitch-wrapper {
+            position: relative;
+        }
+        
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 #00fff9;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-anim {
+            0% { clip: rect(33px, 9999px, 11px, 0); }
+            20% { clip: rect(89px, 9999px, 74px, 0); }
+            40% { clip: rect(12px, 9999px, 56px, 0); }
+            60% { clip: rect(67px, 9999px, 23px, 0); }
+            80% { clip: rect(45px, 9999px, 88px, 0); }
+            100% { clip: rect(2px, 9999px, 34px, 0); }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { clip: rect(2px, 9999px, 88px, 0); }
+            20% { clip: rect(45px, 9999px, 23px, 0); }
+            40% { clip: rect(67px, 9999px, 56px, 0); }
+            60% { clip: rect(12px, 9999px, 74px, 0); }
+            80% { clip: rect(89px, 9999px, 11px, 0); }
+            100% { clip: rect(33px, 9999px, 34px, 0); }
+        }
+
+        /* Service Card Hover */
+        .service-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 102, 0, 0.2);
+        }
+
+        /* Loader */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Form Styling */
+        .input-field {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: var(--neon-orange);
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animated Background Grid */
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(255, 102, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 102, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Particles */
+        .particle {
+            position: absolute;
+            background: var(--neon-orange);
+            border-radius: 50%;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Loading Screen -->
+    <div id="loader" class="loader-overlay">
+        <div class="text-center">
+            <div class="text-6xl font-display font-black text-orange-600 mb-4 tracking-tighter animate-pulse">SS&D</div>
+            <div class="w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-orange-600 w-0 transition-all duration-1000"></div>
+            </div>
+            <p class="mt-4 text-gray-500 font-mono text-sm">INITIALIZING SYSTEMS...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-orange-900/30">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 group cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="w-10 h-10 bg-gradient-to-br from-orange-600 to-red-700 rounded flex items-center justify-center transform group-hover:rotate-12 transition-transform">
+                    <i class="fas fa-bolt text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-xl leading-none text-white">SIGNATURE SERVICE <span class="text-orange-500">DIESEL</span></h1>
+                    <p class="text-xs text-gray-400 tracking-widest">ADDICTED PERFORMANCE</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#services" class="text-gray-300 hover:text-orange-500 transition-colors font-medium tracking-wide">SERVICES</a>
+                <a href="#booking" class="text-gray-300 hover:text-orange-500 transition-colors font-medium tracking-wide">BOOKING</a>
+                <a href="#performance" class="text-gray-300 hover:text-orange-500 transition-colors font-medium tracking-wide">PERFORMANCE</a>
+                <button onclick="openBookingModal()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded font-bold transform hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,102,0,0.4)]">
+                    BOOK NOW
+                </button>
+            </div>
+            
+            <button class="md:hidden text-2xl text-orange-500" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-40 transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8 md:hidden">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-3xl text-gray-500 hover:text-white">
+            <i class="fas fa-times"></i>
+        </button>
+        <a href="#services" onclick="toggleMobileMenu()" class="text-2xl font-display text-white hover:text-orange-500">SERVICES</a>
+        <a href="#booking" onclick="toggleMobileMenu()" class="text-2xl font-display text-white hover:text-orange-500">BOOKING</a>
+        <a href="#performance" onclick="toggleMobileMenu()" class="text-2xl font-display text-white hover:text-orange-500">PERFORMANCE</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="grid-bg"></div>
+        <div id="particles-container" class="absolute inset-0 pointer-events-none"></div>
+        
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&q=80&w=2000" alt="Diesel Truck" class="w-full h-full object-cover opacity-40">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-transparent"></div>
+        </div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="max-w-4xl">
+                <div class="inline-block px-4 py-1 border border-orange-500/50 rounded-full bg-orange-500/10 mb-6 backdrop-blur-sm">
+                    <span class="text-orange-400 font-mono text-sm tracking-widest">SOUTHWEST FLORIDA'S PREMIER DIESEL SERVICE</span>
+                </div>
+                
+                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-black leading-tight mb-6 glitch-wrapper">
+                    <span class="block glitch text-white" data-text="FIELD SERVICE">FIELD SERVICE</span>
+                    <span class="block text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600 neon-text-orange">REPAIR & MODS</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl font-light leading-relaxed">
+                    Mobile diesel repair, performance tuning, and aftermarket modifications. 
+                    We bring the shop to you across Southwest Florida.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="scrollToSection('booking')" class="group relative px-8 py-4 bg-orange-600 overflow-hidden rounded-sm font-bold text-lg tracking-wider">
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        <span class="relative flex items-center gap-2">
+                            SCHEDULE SERVICE <i class="fas fa-arrow-right"></i>
+                        </span>
+                    </button>
+                    <button onclick="scrollToSection('performance')" class="px-8 py-4 border border-white/30 hover:border-orange-500 hover:text-orange-500 transition-all rounded-sm font-bold text-lg tracking-wider backdrop-blur-sm">
+                        VIEW PERFORMANCE PARTS
+                    </button>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-8 mt-16 border-t border-white/10 pt-8">
+                    <div>
+                        <div class="text-3xl md:text-4xl font-display font-bold text-white counter" data-target="24">0</div>
+                        <div class="text-sm text-gray-500 uppercase tracking-wider mt-1">Hour Service</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl md:text-4xl font-display font-bold text-white counter" data-target="50">0</div>
+                        <div class="text-sm text-gray-500 uppercase tracking-wider mt-1">Mile Radius</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl md:text-4xl font-display font-bold text-white counter" data-target="100">0</div>
+                        <div class="text-sm text-gray-500 uppercase tracking-wider mt-1">% Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-24 relative bg-zinc-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl md:text-5xl font-bold mb-4">OUR <span class="text-orange-500">SERVICES</span></h2>
+                <div class="w-24 h-1 bg-orange-600 mx-auto"></div>
+                <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Full-scale mobile diesel repair and performance solutions tailored for heavy-duty applications.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Service Card 1 -->
+                <div class="service-card bg-zinc-800/50 p-6 rounded-lg border border-zinc-700 hover:border-orange-500/50 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-truck-monster text-6xl text-orange-500"></i>
+                    </div>
+                    <div class="w-14 h-14 bg-orange-600/20 rounded-lg flex items-center justify-center mb-4 text-orange-500 text-2xl">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold mb-2">Field Repair</h3>
+                    <p class="text-gray-400 text-sm mb-4">On-site diagnostics and repair for all diesel engines. Minimize downtime with our mobile units.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Engine Diagnostics</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Hydraulic Systems</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Electrical Repair</li>
+                    </ul>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="service-card bg-zinc-800/50 p-6 rounded-lg border border-zinc-700 hover:border-orange-500/50 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-tachometer-alt text-6xl text-orange-500"></i>
+                    </div>
+                    <div class="w-14 h-14 bg-orange-600/20 rounded-lg flex items-center justify-center mb-4 text-orange-500 text-2xl">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold mb-2">Performance Mods</h3>
+                    <p class="text-gray-400 text-sm mb-4">Unlock the true potential of your diesel engine with our "Addicted Performance" tuning packages.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>ECU Tuning</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Turbo Upgrades</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Exhaust Systems</li>
+                    </ul>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="service-card bg-zinc-800/50 p-6 rounded-lg border border-zinc-700 hover:border-orange-500/50 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-oil-can text-6xl text-orange-500"></i>
+                    </div>
+                    <div class="w-14 h-14 bg-orange-600/20 rounded-lg flex items-center justify-center mb-4 text-orange-500 text-2xl">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold mb-2">Maintenance</h3>
+                    <p class="text-gray-400 text-sm mb-4">Preventative maintenance programs to keep your fleet running at peak efficiency.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Oil & Fluid Changes</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Filter Replacement</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Brake Service</li>
+                    </ul>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="service-card bg-zinc-800/50 p-6 rounded-lg border border-zinc-700 hover:border-orange-500/50 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-truck-loading text-6xl text-orange-500"></i>
+                    </div>
+                    <div class="w-14 h-14 bg-orange-600/20 rounded-lg flex items-center justify-center mb-4 text-orange-500 text-2xl">
+                        <i class="fas fa-truck-moving"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold mb-2">Fleet Service</h3>
+                    <p class="text-gray-400 text-sm mb-4">Comprehensive service contracts for commercial fleets. Priority scheduling available.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>DOT Inspections</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>AC Repair</li>
+                        <li><i class="fas fa-check text-orange-500 mr-2"></i>Trailer Repair</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section (Addicted Performance) -->
+    <section id="performance" class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-black to-zinc-900"></div>
+        <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ff6600\' fill-opacity=\'0.2\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <div class="inline-block px-3 py-1 bg-orange-600 text-white text-xs font-bold tracking-widest mb-4 rounded">ADDICTED PERFORMANCE</div>
+                    <h2 class="font-display text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                        UNLEASH THE <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500">BEAST WITHIN</span>
+                    </h2>
+                    <p class="text-gray-300 text-lg mb-8 leading-relaxed">
+                        We don't just fix trucks; we transform them. Our Addicted Performance division specializes in high-end aftermarket modifications that push the limits of power, torque, and efficiency.
+                    </p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-orange-900/30 flex items-center justify-center flex-shrink-0 text-orange-500">
+                                <i class="fas fa-microchip text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl mb-1">Custom ECU Mapping</h4>
+                                <p class="text-gray-400 text-sm">Dyno-tested tunes for maximum horsepower gains without sacrificing reliability.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-orange-900/30 flex items-center justify-center flex-shrink-0 text-orange-500">
+                                <i class="fas fa-wind text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl mb-1">Forced Induction</h4>
+                                <p class="text-gray-400 text-sm">Turbo upgrades, intercooler kits, and intake systems for massive airflow improvements.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-full bg-orange-900/30 flex items-center justify-center flex-shrink-0 text-orange-500">
+                                <i class="fas fa-fire text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xl mb-1">Fuel System Overhauls</h4>
+                                <p class="text-gray-400 text-sm">High-flow injectors and lift pumps to support your new power levels.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2 relative">
+                    <div class="relative rounded-lg overflow-hidden shadow-2xl border border-orange-500/30 group">
+                        <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&q=80&w=1000" alt="Performance Engine" class="w-full h-auto transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-8">
+                            <div class="text-4xl font-display font-bold text-white mb-1">150+ HP</div>
+                            <div class="text-orange-500 font-bold tracking-wider">POTENTIAL GAINS</div>
+                        </div>
+                    </div>
+                    <!-- Floating Badge -->
+                    <div class="absolute -top-6 -right-6 w-32 h-32 bg-orange-600 rounded-full flex items-center justify-center transform rotate-12 shadow-lg animate-bounce" style="animation-duration: 3s;">
+                        <div class="text-center">
+                            <div class="text-2xl font-black text-white">SALE</div>
+                            <div class="text-xs font-bold text-white">ON TUNES</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking & Payment Section -->
+    <section id="booking" class="py-24 bg-zinc-900 relative">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto bg-black/40 backdrop-blur-md rounded-2xl border border-zinc-700 p-8 md:p-12 shadow-2xl">
+                <div class="text-center mb-10">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">BOOK YOUR <span class="text-orange-500">SERVICE</span></h2>
+                    <p class="text-gray-400">Schedule a field service visit or consultation for performance modifications.</p>
+                </div>
+
+                <form id="bookingForm" class="space-y-6" onsubmit="handleBooking(event)">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-400 uppercase tracking-wider">Full Name</label>
+                            <input type="text" required class="input-field w-full px-4 py-3 rounded text-white placeholder-gray-600" placeholder="John Doe">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-400 uppercase tracking-wider">Phone Number</label>
+                            <input type="tel" required class="input-field w-full px-4 py-3 rounded text-white placeholder-gray-600" placeholder="(239) 555-0199">
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-400 uppercase tracking-wider">Vehicle/Equipment</label>
+                            <input type="text" required class="input-field w-full px-4 py-3 rounded text-white placeholder-gray-600" placeholder="e.g. 2022 Ford F-350">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-bold text-gray-400 uppercase tracking-wider">Service Type</label>
+                            <select id="serviceSelect" onchange="updatePrice()" class="input-field w-full px-4 py-3 rounded text-white bg-transparent [&>option]:bg-zinc-800">
+                                <option value="diagnostic">Diagnostic Check ($125)</option>
+                                <option value="maintenance">Routine Maintenance ($250)</option>
+                                <option value="repair">General Repair (Quote)</option>
+                                <option value="performance">Performance Tune ($800)</option>
+                                <option value="fleet">Fleet Service (Contract)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-400 uppercase tracking-wider">Location (Southwest Florida)</label>
+                        <input type="text" required class="input-field w-full px-4 py-3 rounded text-white placeholder-gray-600" placeholder="Service Address">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-400 uppercase tracking-wider">Preferred Date & Time</label>
+                        <input type="datetime-local" required class="input-field w-full px-4 py-3 rounded text-white placeholder-gray-600 [color-scheme:dark]">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-gray-400 uppercase tracking-wider">Additional Details</label>
+                        <textarea rows="3" class="input-field w-full px-4 py-3 rounded text-white placeholder-gray-600" placeholder="Describe the issue or desired modifications..."></textarea>
+                    </div>
+
+                    <!-- Payment Section -->
+                    <div class="mt-8 pt-8 border-t border-zinc-700">
+                        <h3 class="font-display text-xl font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-lock text-green-500"></i> SECURE PAYMENT
+                        </h3>
+                        
+                        <div class="bg-zinc-800/50 p-6 rounded-lg border border-zinc-700 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-gray-400">Service Estimate:</span>
+                                <span id="priceDisplay" class="text-2xl font-bold text-orange-500">$125.00</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mb-4">*Final price may vary based on on-site inspection. Deposit required to secure booking.</div>
+                            
+                            <!-- Mock Credit Card UI -->
+                            <div class="space-y-4">
+                                <div class="relative">
+                                    <input type="text" class="input-field w-full px-4 py-3 rounded text-white pl-12" placeholder="Card Number">
+                                    <i class="fab fa-cc-visa absolute left-4 top-3.5 text-2xl text-gray-400"></i>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" class="input-field w-full px-4 py-3 rounded text-white" placeholder="MM/YY">
+                                    <input type="text" class="input-field w-full px-4 py-3 rounded text-white" placeholder="CVC">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 rounded-lg text-lg transform transition-all hover:scale-[1.02] shadow-lg shadow-orange-900/50 flex items-center justify-center gap-2">
+                            <span>CONFIRM BOOKING & PAY DEPOSIT</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <p class="text-center text-xs text-gray-500 mt-4">
+                            <i class="fas fa-shield-alt mr-1"></i> 256-bit SSL Encrypted Transaction
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-zinc-800 pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 bg-orange-600 rounded flex items-center justify-center">
+                            <i class="fas fa-bolt text-white text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-white">SIGNATURE SERVICE DIESEL</h3>
+                            <p class="text-xs text-orange-500 tracking-widest">ADDICTED PERFORMANCE</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-500 mb-6 max-w-md">
+                        Premier mobile diesel repair and performance modification services serving Southwest Florida. We bring expertise, speed, and reliability directly to your location.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-gray-400 hover:bg-orange-600 hover:text-white transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-gray-400 hover:bg-orange-600 hover:text-white transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-gray-400 hover:bg-orange-600 hover:text-white transition-all">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-white mb-6 uppercase tracking-wider">Quick Links</h4>
+                    <ul class="space-y-3 text-gray-500">
+                        <li><a href="#" class="hover:text-orange-500 transition-colors">Home</a></li>
+                        <li><a href="#services" class="hover:text-orange-500 transition-colors">Services</a></li>
+                        <li><a href="#performance" class="hover:text-orange-500 transition-colors">Performance</a></li>
+                        <li><a href="#booking" class="hover:text-orange-500 transition-colors">Book Now</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-white mb-6 uppercase tracking-wider">Contact</h4>
+                    <ul class="space-y-3 text-gray-500">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1 text-orange-600"></i>
+                            <span>Southwest Florida<br>Mobile Service Area</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone text-orange-600"></i>
+                            <span>(239) 555-DIESEL</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-envelope text-orange-600"></i>
+                            <span>service@ssdiesel.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-600 text-sm">&copy; 2026 Signature Service Diesel. All rights reserved.</p>
+                <div class="flex gap-6 text-sm text-gray-600">
+                    <a href="#" class="hover:text-white">Privacy Policy</a>
+                    <a href="#" class="hover:text-white">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black/90 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-zinc-900 border border-orange-500/50 rounded-2xl p-8 max-w-md w-full text-center transform scale-90 opacity-0 transition-all duration-300" id="modalContent">
+            <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-4xl text-green-500"></i>
+            </div>
+            <h3 class="font-display text-2xl font-bold text-white mb-2">BOOKING CONFIRMED!</h3>
+            <p class="text-gray-400 mb-6">Your service has been scheduled. A confirmation text has been sent to your phone. Our technician will arrive at the scheduled time.</p>
+            <div class="bg-zinc-800 rounded p-4 mb-6 text-left">
+                <div class="flex justify-between mb-2 text-sm">
+                    <span class="text-gray-500">Booking ID:</span>
+                    <span class="text-orange-500 font-mono">#SSD-8829</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Deposit Paid:</span>
+                    <span class="text-white font-bold" id="modalPrice">$125.00</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded transition-colors">
+                CLOSE
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Loader Animation
+        window.addEventListener('load', () => {
+            const progressBar = document.getElementById('progress-bar');
+            const loader = document.getElementById('loader');
+            
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 100);
+            
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    initAnimations();
+                }, 500);
+            }, 1500);
+        });
+
+        // GSAP Animations
+        function initAnimations() {
+            // Animate counters
+            gsap.utils.toArray('.counter').forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                gsap.to(counter, {
+                    innerHTML: target,
+                    duration: 2,
+                    snap: { innerHTML: 1 },
+                    ease: "power2.out"
+                });
+            });
+
+            // ScrollTrigger for sections
+            gsap.from("#services .service-card", {
+                scrollTrigger: "#services",
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "power3.out"
+            });
+        }
+
+        // Particle System
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 4 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s infinite linear`;
+                
+                container.appendChild(particle);
+                
+                animateParticle(particle);
+            }
+        }
+
+        function animateParticle(particle) {
+            const x = Math.random() * 100 - 50;
+            const y = Math.random() * 100 - 50;
+            const duration = Math.random() * 5000 + 5000;
+            
+            particle.animate([
+                { transform: 'translate(0, 0)' },
+                { transform: `translate(${x}px, ${y}px)` }
+            ], {
+                duration: duration,
+                iterations: Infinity,
+                direction: 'alternate',
+                easing: 'ease-in-out'
+            });
+        }
+
+        createParticles();
+
+        // Interactive Functions
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('translate-x-full');
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function openBookingModal() {
+            scrollToSection('booking');
+        }
+
+        // Pricing Logic
+        const prices = {
+            'diagnostic': 125,
+            'maintenance': 250,
+            'repair': 0,
+            'performance': 800,
+            'fleet': 0
+        };
+
+        function updatePrice() {
+            const select = document.getElementById('serviceSelect');
+            const display = document.getElementById('priceDisplay');
+            const value = select.value;
+            
+            if (prices[value] === 0) {
+                display.textContent = "Quote Required";
+                display.classList.remove('text-orange-500');
+                display.classList.add('text-gray-400');
+            } else {
+                display.textContent = '$' + prices[value] + '.00';
+                display.classList.add('text-orange-500');
+                display.classList.remove('text-gray-400');
+            }
+        }
+
+        // Form Handling
+        function handleBooking(e) {
+            e.preventDefault();
+            
+            // Simulate processing
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> PROCESSING...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                // Show success modal
+                const modal = document.getElementById('successModal');
+                const content = document.getElementById('modalContent');
+                const priceDisplay = document.getElementById('priceDisplay').textContent;
+                document.getElementById('modalPrice').textContent = priceDisplay;
+                
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                setTimeout(() => {
+                    content.classList.remove('scale-90', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+                
+                // Reset form
+                e.target.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                updatePrice();
+            }, 2000);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            const content = document.getElementById('modalContent');
+            
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-90', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-black/95');
+                nav.classList.remove('bg-black/80');
+            } else {
+                nav.classList.add('bg-black/80');
+                nav.classList.remove('bg-black/95');
+            }
+        });
+    </script>
+</body>
+</html>
